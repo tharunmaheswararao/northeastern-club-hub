@@ -1,0 +1,74 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import StudentSignup from './pages/Signup Pages/StudentSignup';
+import StudentHome from './pages/StudentHome';
+import StudentLogin from './pages/Login Pages/StudentLogin';
+import ClubAdminSignup from './pages/Signup Pages/ClubAdminSignup';
+import ClubAdminLogin from './pages/Login Pages/ClubAdminLogin';
+import ClubAdminHome from './pages/ClubAdminHome';
+import PlatformAdminSignup from './pages/Signup Pages/PlatformAdminSignup';
+import PlatformAdminLogin from './pages/Login Pages/PlatformAdminLogin';
+import PlatformAdminHome from './pages/PlatformAdminHome';
+import MainEvents from "./pages/MainEvents";
+import EventForm from "./components/EventForm";
+import EventDetails from "./components/EventDetails"; // Import EventDetails page
+import { EventData } from "./models/Types";
+import GetEvents from "./components/GetEvents";
+import EditEvents from "./components/EditEvents";
+import EnrollmentPage from "./pages/Enrollment/EnrollmentPage";
+import AdminEventList from './components/AdminEventList';
+
+const App: React.FC = () => {
+  const handleEventSubmit = (eventData: EventData) => {
+    console.log("Event Submitted:", eventData);
+    // Add your logic here to process the submitted event data
+  };
+
+  const handleFormClose = () => {
+    console.log("Event form closed");
+    // Add logic to handle form close
+  };
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/Student" element={<StudentSignup />} />
+        <Route path="/ClubAdmin" element={<ClubAdminSignup />} />
+        <Route path="/PlatformAdmin" element={<PlatformAdminSignup />} />
+        <Route path="/Student-home" element={<StudentHome />} />
+        <Route path="/login" element={<StudentLogin />} />
+        <Route path="/club-admin-login" element={<ClubAdminLogin />} />
+        <Route path="/club-admin-signup" element={<ClubAdminSignup />} />
+        <Route path="/club-admin-dashboard" element={<ClubAdminHome />} />
+        <Route path="/platform-admin-login" element={<PlatformAdminLogin />} />
+        <Route path="/platform-admin-signup" element={<PlatformAdminSignup />} />
+        <Route path="/platform-admin-dashboard" element={<PlatformAdminHome />} />
+        {/* Add other routes here */}
+        {/* Home page showing list of events */}
+        <Route path="/main-events" element={<MainEvents />} />
+
+        {/* Route for creating a new event */}
+        <Route
+          path="/create-event"
+          element={<EventForm onSubmit={handleEventSubmit} onClose={handleFormClose} />}
+        />
+
+        {/* Route for displaying specific event details */}
+        <Route path="/events/:eventId" element={<EventDetails />} />
+
+        {/* Route for displaying my event details */}
+        <Route path="/my-events" element={<GetEvents />} />
+
+        {/* Route to edit my event details */}
+        <Route path="/edit-my-event/:eventId" element={<EditEvents />} /> 
+
+        <Route path="/enroll" element={<EnrollmentPage />} />
+
+        <Route path="/entry-request" element={<AdminEventList />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;

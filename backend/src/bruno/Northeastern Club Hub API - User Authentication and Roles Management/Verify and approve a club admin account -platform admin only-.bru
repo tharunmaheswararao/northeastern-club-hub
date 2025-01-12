@@ -1,0 +1,17 @@
+meta {
+  name: Verify and approve a club admin account -platform admin only-
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3004/api/users/verify/673bfa79fa74dae67778a70e
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "status": ""
+  }
+}

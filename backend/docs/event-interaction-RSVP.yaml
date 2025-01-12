@@ -1,0 +1,155 @@
+openapi: 3.1.0
+info:
+  title: Northeastern Club Hub - Event Interaction and RSVP API
+  version: 1.0.0
+  description: API for managing event RSVP, reminders, and notifications for users.
+  
+servers:
+  - url: http://localhost:3000
+    description: Local development environment
+
+paths:
+  /api/events/{eventId}/rsvp:
+    post:
+      summary: RSVP to an Event
+      description: Allows a student to RSVP to a specific event.
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique ID of the event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RsvpRequest'
+            examples:
+              RSVPExample:
+                summary: Example RSVP
+                value:
+                  studentId: "stud1234"
+      responses:
+        '201':
+          description: RSVP successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+            examples:
+              SuccessExample:
+                summary: Example success response
+                value:
+                  message: "RSVP successful for event."
+        '400':
+          description: Bad Request - Missing or invalid fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/events/{eventId}/reminders:
+    get:
+      summary: Get Reminders for RSVP’d Events
+      description: Retrieves reminder notifications for RSVP’d events.
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique ID of the event.
+      responses:
+        '200':
+          description: Reminder details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemindersResponse'
+            examples:
+              ReminderExample:
+                summary: Example reminder response
+                value:
+                  eventId: "event12345"
+                  reminders:
+                    - date: "2024-12-15T10:00:00Z"
+                      message: "Don't forget to attend the event tomorrow!"
+        '404':
+          description: Event not found or no reminders set
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    RsvpRequest:
+      type: object
+      properties:
+        studentId:
+          type: string
+          description: Unique ID of the student RSVPing.
+      required:
+        - studentId
+
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Response message confirming the RSVP.
+
+    RemindersResponse:
+      type: object
+      properties:
+        eventId:
+          type: string
+          description: The unique ID of the event.
+        reminders:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date-time
+                description: The date and time of the reminder.
+              message:
+                type: string
+                description: The reminder message.
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples: 
+            - "ERR_400"
+            - "ERR_404"
+            - "ERR_500"
+        message:
+          type: string
+          examples: 
+            - "Bad Request"
+            - "Event not found"
+            - "Internal Server Error"

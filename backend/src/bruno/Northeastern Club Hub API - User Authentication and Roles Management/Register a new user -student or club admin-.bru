@@ -1,0 +1,21 @@
+meta {
+  name: Register a new user -student or club admin-
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3004/api/users/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "ck@example.com",
+    "name": "Test User",
+    "password": "password123",
+    "role": "student"
+  }
+  
+}

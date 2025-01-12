@@ -1,0 +1,17 @@
+{
+    "loginTitle": "Iniciar sesión",
+    "emailLabel": "Correo electrónico",
+    "passwordLabel": "Contraseña",
+    "loginButton": "Iniciar sesión",
+    "noAccount": "¿No tienes una cuenta?",
+    "signUpLink": "Regístrate",
+    "errorMessage": {
+      "requiredFields": "Se requieren el correo electrónico y la contraseña.",
+      "invalidCredentials": "Correo electrónico o contraseña inválidos."
+    },
+    "language": {
+      "english": "Inglés",
+      "spanish": "Español"
+    }
+  }
+  

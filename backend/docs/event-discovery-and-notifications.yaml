@@ -1,0 +1,170 @@
+openapi: 3.1.0
+info:
+  title: Northeastern Club Hub API - Event Discovery and Notifications
+  description: API endpoints for event discovery, including viewing, filtering, and receiving notifications for events.
+  version: 1.0.0
+servers:
+  - url: http://localhost:9000
+    description: Local development environment
+
+paths:
+  /api/events/feed:
+    get:
+      summary: Get upcoming events feed
+      description: Retrieves a chronological list of upcoming events from all clubs.
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+            description: Number of events to retrieve per page.
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+            description: Number of items to skip for pagination.
+      responses:
+        "200":
+          description: A list of upcoming events in chronological order
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/events/search:
+    get:
+      summary: Search and filter events
+      description: Allows students to search and filter events by category and date range.
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Event category to filter by (e.g., cultural, academic, sports).
+        - name: startDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Filter events starting from this date.
+        - name: endDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Filter events until this date.
+      responses:
+        "200":
+          description: A filtered list of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+        "400":
+          description: Bad Request - Invalid filters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/notifications:
+    get:
+      summary: Get notifications for new events and announcements
+      description: Retrieves a list of notifications for new events and announcements from clubs.
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+            description: ID of the student to retrieve notifications for.
+      responses:
+        "200":
+          description: A list of notifications for new events and announcements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+        "404":
+          description: Notifications not found for the specified user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "ERR_400"
+        message:
+          type: string
+          example: "Invalid filter criteria"
+
+    Event:
+      type: object
+      properties:
+        eventId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date-time
+        location:
+          type: string
+        clubId:
+          type: string
+        category:
+          type: string
+
+    Notification:
+      type: object
+      properties:
+        notificationId:
+          type: string
+        userId:
+          type: string
+        message:
+          type: string
+        sentAt:
+          type: string
+          format: date-time
+        isRead:
+          type: boolean

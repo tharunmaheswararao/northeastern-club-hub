@@ -1,0 +1,225 @@
+openapi: 3.1.0
+info:
+  title: Northeastern Club Hub - Event Management API
+  summary: API endpoints for managing events, including creating, updating, deleting, listing, and viewing event details.
+  version: '1.0'
+servers:
+  - url: https://localhost:9000
+    description: Local development environment
+
+paths:
+  /api/events:
+    post:
+      operationId: create-event
+      description: Allows a club admin to create a new event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventInput"
+      responses:
+        '200':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        '400':
+          description: Invalid input, object invalid
+        '401':
+          description: Unauthorized access, authorization required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    get:
+      operationId: list-events
+      description: Retrieves a list of all upcoming events in chronological order, accessible by students.
+      responses:
+        '200':
+          description: A list of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+        '401':
+          description: Unauthorized access, authorization required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/events/{eventId}:
+    get:
+      operationId: get-event
+      description: Retrieves detailed information about a specific event by eventId, accessible by students.
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "601c171b2e7e4f33c827d182"
+      responses:
+        '200':
+          description: Event details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        '404':
+          description: Event not found
+        '401':
+          description: Unauthorized access, authorization required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    put:
+      operationId: update-event
+      description: Allows a club admin to update details of a specific event.
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "601c171b2e7e4f33c827d182"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventInput"
+      responses:
+        '200':
+          description: Event updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        '404':
+          description: Event not found
+        '401':
+          description: Unauthorized access, authorization required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      operationId: delete-event
+      description: Allows a club admin to delete a specific event.
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "601c171b2e7e4f33c827d182"
+      responses:
+        '200':
+          description: Event deleted successfully (no content)
+        '404':
+          description: Event not found
+        '401':
+          description: Unauthorized access, authorization required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        eventId:
+          type: string
+          example: "601c171b2e7e4f33c827d182"
+        title:
+          type: string
+          example: "Tech Talk"
+        description:
+          type: string
+          example: "An in-depth discussion on the latest tech trends."
+        date:
+          type: string
+          format: date
+          example: "2024-02-15"
+        time:
+          type: string
+          example: "14:00"
+        location:
+          type: string
+          example: "Student Center, Room 205"
+
+    EventInput:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the event
+          example: "Tech Talk"
+        description:
+          type: string
+          description: Details about the event
+          example: "An in-depth discussion on the latest tech trends."
+        date:
+          type: string
+          format: date
+          description: Date of the event in YYYY-MM-DD format
+          example: "2024-02-15"
+        time:
+          type: string
+          description: Start time of the event in HH:MM format
+          example: "14:00"
+        location:
+          type: string
+          description: Location where the event will take place
+          example: "Student Center, Room 205"
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "401"
+        message:
+          type: string
+          example: "Unauthorized access, authorization required"

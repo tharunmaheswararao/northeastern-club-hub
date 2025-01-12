@@ -1,0 +1,17 @@
+{
+    "loginTitle": "Log in",
+    "emailLabel": "Email address",
+    "passwordLabel": "Password",
+    "loginButton": "Log In",
+    "noAccount": "Don't have an account?",
+    "signUpLink": "Sign up",
+    "errorMessage": {
+      "requiredFields": "Both email and password are required.",
+      "invalidCredentials": "Invalid email or password."
+    },
+    "language": {
+      "english": "English",
+      "spanish": "Español"
+    }
+  }
+  
